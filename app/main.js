@@ -26,6 +26,7 @@ let aboutWin = null
 let settingsWin = null
 let tutorialWin = null
 let welcomeWin = null
+let contributorSettingsWindow = null
 let settings
 let pausedForSuspend = false
 
@@ -218,6 +219,22 @@ function createTutorialWindow () {
   }
 }
 
+function createContributorSettingsWindow() {
+  const modalPath = `file://${__dirname}/contributor-settings.html`
+  contributorSettingsWindow = new BrowserWindow({
+    x: displaysX(),
+    y: displaysY(),
+    autoHideMenuBar: true,
+    icon: `${__dirname}/images/stretchly_18x18.png`,
+    backgroundColor: settings.get('mainColor')
+  })
+  contributorSettingsWindow.loadURL(modalPath)
+  if (contributorSettingsWindow) {
+    contributorSettingsWindow.on('closed', () => {
+      contributorSettingsWindow = null
+    })
+  }
+}
 function planVersionCheck (seconds = 1) {
   setTimeout(checkVersion, seconds * 1000)
 }
@@ -920,4 +937,8 @@ ipcMain.on('change-language', function (event, language) {
 
 ipcMain.on('open-tutorial', function (event) {
   createTutorialWindow()
+})
+
+ipcMain.on('open-contributor-settings', function (event) {
+  createContributorSettingsWindow()
 })
